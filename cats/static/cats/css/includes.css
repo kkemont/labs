@@ -1,0 +1,8 @@
+.side-navigation{
+    background-color: #b0ac5a;
+    height:100%;
+}
+
+.side-navigation div{
+    padding: 10px;
+}

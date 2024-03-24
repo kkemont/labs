@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+        <div class="full-width">
+            <div class="container-center"> <h1> Встречайте легенды </h1></div>
+
+            <ul>
+                {% for cat in cats %}
+                    <li>
+                        <div class="container-inline align-v-center">
+                            <div>
+                                <img src="{% static cat.img %}" alt="FunnyCats" width="100px">
+                            </div>
+                            <div style="padding: 10px;" class="full-width">
+                                <h2>{{ cat.name }}</h2>
+                                <p>{{ cat.about|linebreaks|truncatewords:50 }}</p>
+                                <div>
+                                    <a href="{% url 'cats' cat.id %}">
+                                    <button type="button" class="button">Узнать больше</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}
+                            <hr>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+{% endblock %}

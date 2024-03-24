@@ -1,0 +1,8 @@
+{% load cats_tags %}
+{% get_categories as categories %}
+
+<nav class="side-navigation">
+  {% for el in categories %}
+    <div><a href="{% url 'filter' el.id %}">{{el.name}}</a></div>
+  {% endfor %}
+</nav>

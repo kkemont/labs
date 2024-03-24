@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+{% load cats_tags %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+
+    <link type="text/css" href="{% static 'cats/css/base.css'%}" rel="stylesheet">
+    <link type="text/css" href="{% static 'cats/css/includes.css'%}" rel="stylesheet">
+
+</head>
+<body>
+    <div class="full-height">
+        <div class="header-style">
+            <nav>
+                <ul>
+                    <li>
+                       <a href="/"><img src="{% static 'cats/images/catlogo.png' %}" alt="FunnyCats" height="30px"></a>
+                    </li>
+                    {% for el in menu %}
+                        <li><a href="{% url el.url_name %}">{{ el.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+        <div class="full-height full-width">
+            <div class="container-inline full-height">
+
+                <div class="full-height">{% show_categories selected_id %}</div>
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

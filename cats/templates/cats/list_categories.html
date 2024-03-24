@@ -1,0 +1,6 @@
+<nav class="side-navigation">
+  {% for cat in cats %}
+    {% if cat.id == selected_id %}<div class="selected">{%else%}<div>{%endif%}
+    <a href="{% url 'filter' cat.id %}">{{cat.name}}</a></div>
+  {% endfor %}
+</nav>
