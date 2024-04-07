@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="full-width">
+    <div class="container-center">
+        <h1>{{post.title}}</h1>
+    </div>
+
+    {% if post.photo %}
+        <p><img class="img-article-left" src="{{post.photo.url}}"></p>
+    {% endif %}
+
+    <div class="container-center">
+        {{post.content|linebreaks}}
+    </div>
+</div>
+
+{% endblock %}

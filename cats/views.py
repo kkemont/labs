@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from cats.models import Cat
 
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
@@ -8,26 +9,16 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
         {'title': "Войти", 'url_name': 'login'}
         ]
 
-descriptions = ["Большой Шлёпа (также известен как просто Шлёпа или Большой русский кот) — серия интернет-мемов с "
-                "каракалом по кличке Гоша. В англоязычном сегменте Интернета распространено прозвище Floppa или "
-                "Big Floppa.",
-                "Бродячий кот по кличке Мистер Фреш прославился в соцсетях благодаря приложению Hello Street Cat, "
-                "в котором можно давать донаты на корм. Привередливый кот, ждущий от поклонников только свежий корм в "
-                "прямом эфире, стал героем мемов и фанартов."]
-
-cats_db = [{'name': 'Большой Шлепа', 'weight': 20, 'id': 0, 'img': 'cats/images/bigfloppa.jpg', 'about': descriptions[0]},
-           {'name': 'Мистер Фреш', 'weight': 6, 'id': 1, 'img': 'cats/images/mrfresh.png', 'about': descriptions[1]}]
-
-
 navigation_db = [{'id': 0, 'name': 'Смешные'},
                  {'id': 1, 'name': 'Толстые'},
                  {'id': 2, 'name': 'Маленькие'}]
 
 
 def index(request):
+    cats = Cat.published.all()
     data = {'title': 'Главная страница',
             'menu': menu,
-            'cats': cats_db,
+            'cats': cats,
             'selected_id': 0
             }
     return render(request, 'cats/index.html', context=data)
@@ -38,8 +29,15 @@ def about(request):
     return render(request, 'cats/about.html', data)
 
 
-def show_concrete_cat(request, cat_id):
-    return HttpResponse(f"<h2Статья о коте {cat_id}</h2>")
+def show_concrete_cat(request, post_slug):
+    post = get_object_or_404(Cat, slug=post_slug)
+    data = {
+        'title': post.title,
+        'menu': menu,
+        'post': post,
+        'selected_id': 1
+    }
+    return render(request, 'cats/post.html', context=data)
 
 
 def login(request):
@@ -60,7 +58,7 @@ def add_page(request):
 def show_categories(request, filter_id):
     data = {'title': 'Главная страница',
             'menu': menu,
-            'cats': cats_db,
+            'cats': Cat.published.all(),
             'selected_id': filter_id
             }
     return render(request, 'cats/index.html', context=data)
