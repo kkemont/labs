@@ -10,5 +10,6 @@ urlpatterns = [
     path('contact/', views.contacts, name='contacts'),
     path('addpage/', views.add_page, name='add_page'),
     path('login/', views.login, name='login'),
-    path('filter/<int:filter_id>/', views.show_categories, name='filter'),
+    path('category/<slug:category_slug>/', views.show_categories, name='category'),
+    path('tag/<slug:tag_slug>', views.show_tag_posts, name='tag')
 ]

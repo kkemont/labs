@@ -1,6 +1,6 @@
-from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import redirect, render, get_object_or_404
-from cats.models import Cat
+from django.http import HttpResponseNotFound
+from django.shortcuts import render, get_object_or_404
+from cats.models import Cat, Category, TagPosts
 
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
@@ -8,10 +8,6 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
         {'title': "Обратная связь", 'url_name': 'contacts'},
         {'title': "Войти", 'url_name': 'login'}
         ]
-
-navigation_db = [{'id': 0, 'name': 'Смешные'},
-                 {'id': 1, 'name': 'Толстые'},
-                 {'id': 2, 'name': 'Маленькие'}]
 
 
 def index(request):
@@ -55,12 +51,26 @@ def add_page(request):
     return render(request, 'cats/addpage.html', data)
 
 
-def show_categories(request, filter_id):
-    data = {'title': 'Главная страница',
+def show_categories(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    posts = Cat.published.filter(category_id=category.pk)
+    data = {'title': f'Рубрика: {category.name}',
             'menu': menu,
-            'cats': Cat.published.all(),
-            'selected_id': filter_id
+            'cats': posts,
+            'selected_id': category.pk
             }
+    return render(request, 'cats/index.html', context=data)
+
+
+def show_tag_posts(request, tag_slug):
+    tag = get_object_or_404(TagPosts, slug=tag_slug)
+    posts = tag.tags.filter(is_published=Cat.Status.PUBLISHED)
+    data = {
+        'title': f'Тег: {tag.tag}',
+        'menu': menu,
+        'cats': posts,
+        'cat_selected': None
+    }
     return render(request, 'cats/index.html', context=data)
 
 

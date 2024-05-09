@@ -28,10 +28,21 @@
         <div class="full-height full-width">
             <div class="container-inline full-height">
 
-                <div class="full-height">{% show_categories selected_id %}</div>
+                <div class="full-height">
+                    <nav class="side-navigation">
+                        {% show_categories selected_id %}
+
+                        {% show_all_tags %}
+                    </nav>
+                </div>
+
+                <div class="full-width">
+                {% block breadcrumbs %}
+                {% endblock %}
 
                 {% block content %}
                 {% endblock %}
+                </div>
             </div>
         </div>
     </div>

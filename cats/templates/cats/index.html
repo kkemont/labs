@@ -4,10 +4,13 @@
 
         <div class="full-width">
             <div class="container-center"> <h1> Встречайте легенды </h1></div>
-
             <ul>
                 {% for cat in cats %}
                         <li>
+                            <div>
+                                <p>Категория: {{ cat.category.name }} </p>
+                                <p>Изменено: {{ cat.time_update|date:"d-m-Y H:i:s" }}</p>
+                            </div>
                             <div class="container-inline align-v-center">
                                 <div>
                                     <img src="{% static cat.img %}" alt="FunnyCats" width="100px">

@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
+{% block breadcrumbs %}
+<div class="container-inline align-v-center">
+    {% with post.tags.all as tags %}
+        {% if tags %}
+            {% for t in tags %}
+                <div class="tag-element"><a href="{{ t.get_absolute_url }}">{{t.tag}}</a></div>
+            {% endfor %}
+        {% endif %}
+    {%endwith %}
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="full-width">
     <div class="container-center">

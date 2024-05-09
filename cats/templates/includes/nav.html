@@ -3,6 +3,6 @@
 
 <nav class="side-navigation">
   {% for el in categories %}
-    <div><a href="{% url 'filter' el.id %}">{{el.name}}</a></div>
+    <div><a href="{% url 'category' el.id %}">{{el.name}}</a></div>
   {% endfor %}
 </nav>

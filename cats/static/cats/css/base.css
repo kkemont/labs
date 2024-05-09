@@ -80,3 +80,13 @@ nav a {
 .selected{
     background-color: #99964e;
 }
+
+.tag-element{
+    margin: 1px;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+.tag-element:active{
+    background-color: #99964e;
+}
