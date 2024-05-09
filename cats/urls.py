@@ -1,5 +1,6 @@
 from django.urls import path, register_converter
 from cats import views, converters
+from django.contrib import admin
 
 register_converter(converters.TwoDigitWeightConverter, 'weight2')
 
@@ -13,3 +14,6 @@ urlpatterns = [
     path('category/<slug:category_slug>/', views.show_categories, name='category'),
     path('tag/<slug:tag_slug>', views.show_tag_posts, name='tag')
 ]
+
+admin.site.site_header = 'Панель администрирования'
+admin.site.index_title = 'Мемные коты'
