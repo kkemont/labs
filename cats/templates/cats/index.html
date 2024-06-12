@@ -3,13 +3,23 @@
 {% block content %}
 
         <div class="full-width">
-            <div class="container-center"> <h1> Встречайте легенды </h1></div>
+            <div class="container-center"> <h1> {{title}} </h1></div>
             <ul>
                 {% for cat in cats %}
                         <li>
                             <div>
-                                <p>Категория: {{ cat.category.name }} </p>
+                                <p>Категория: {{ cat.category.name }} | автор: {{ cat.author.username|default:"неизвестен" }} </p>
                                 <p>Изменено: {{ cat.time_update|date:"d-m-Y H:i:s" }}</p>
+                            </div>
+                            <div class="container-inline">
+                                <div class="default-padding container-inline">
+                                    <img src="{% static 'cats/images/like.svg' %}" alt="Likes:" height="15px">
+                                    <div>{{ cat.likes.count }}</div>
+                                </div>
+                                <div class="default-padding container-inline">
+                                    <img src="{% static 'cats/images/dislike.svg' %}" alt="Likes:" height="15px">
+                                    <div>{{ cat.dislikes.count }}</div>
+                                </div>
                             </div>
                             <div class="container-inline align-v-center">
                                 <div>
@@ -35,4 +45,34 @@
             </ul>
         </div>
 
+{% endblock %}
+
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+    <nav class="list-pages">
+        <ul>
+            {% if page_obj.has_previous %}
+                <li class="page-num">
+                    <a href="?page={{page_obj.previous_page_number}}">&lt;</a>
+                </li>
+            {% endif %}
+
+            {% for p in paginator.page_range %}
+            {% if page_obj.number == p %}
+                <li class="page-num page-num-selected">{{p}}</li>
+            {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                <li class="page-num">
+                    <a href="?page={{p}}">{{p}}</a>
+                </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-num">
+                    <a href="?page={{page_obj.next_page_number}}">&gt;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
 {% endblock %}

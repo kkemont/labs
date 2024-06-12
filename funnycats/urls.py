@@ -14,13 +14,20 @@ Including another URLconf
     1. Import the includes() function: from django.urls import includes, path
     2. Add a URL to urlpatterns:  path('blog/', includes('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from cats.views import page_not_found
+import funnycats.settings as settings
+from django.conf.urls.static import static
 
 handler404 = page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('cats.urls'))
+    path('', include('cats.urls')),
+    path('users/', include('users.urls', namespace='users'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

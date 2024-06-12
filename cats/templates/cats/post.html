@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block breadcrumbs %}
 <div class="container-inline align-v-center">
@@ -9,6 +10,10 @@
             {% endfor %}
         {% endif %}
     {%endwith %}
+
+    {% if perms.cats.change_cat %}
+        <p><a href="{% url 'edit_page' post.slug%}">Редактировать</a></p>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -18,13 +23,83 @@
         <h1>{{post.title}}</h1>
     </div>
 
+
     {% if post.photo %}
+    <div class="container-center">
         <p><img class="img-article-left" src="{{post.photo.url}}"></p>
+    </div>
     {% endif %}
+
+    <div class="container-center">
+        <div class="container-inline">
+            <div class="default-padding container-inline">
+                <form action="{% url 'like' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{ post.pk }}" />
+                    <button type="submit" style="border: 0; background: transparent">
+                         <img src="{% static 'cats/images/like.svg' %}" alt="Likes:" height="15px">
+                    </button>
+                </form>
+                <div>{{ post.likes.count }}</div>
+            </div>
+            <div class="default-padding container-inline">
+                <form action="{% url 'dislike' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{ post.pk }}" />
+                    <button type="submit" style="border: 0; background: transparent">
+                         <img src="{% static 'cats/images/dislike.svg' %}" alt="Likes:" height="15px">
+                    </button>
+                </form>
+                <div>{{ post.dislikes.count }}</div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="container-center">
         {{post.content|linebreaks}}
     </div>
 </div>
+
+
+
+{% with post.comments.all as comments %}
+    {% if comments %}
+        <hr>
+        {% for comment in comments %}
+        <div class="comment-container">
+            <div class="comment-title">Дата: {{ comment.time_create }} | Автор: {{ comment.author }}</div>
+            <div>{{ comment }}</div>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<hr>
+
+<form action="{% url 'comment' %}" method="post">
+    {% csrf_token %}
+    <div>
+             {% for f in form_comment %}
+                <div class="container-center">
+                    <div class="form-error">{{ form.non_field_errors }}</div>
+                    <div>
+                        <label class="form-label" for="{{ f.id_for_label}}">{{f.label}}:</label>
+                    </div>
+                    <div>
+                        {{ f }}
+                    </div>
+                    <div class="form-error">{{ f.errors }}</div>
+                </div>
+
+             {% endfor %}
+
+            <input type="hidden" name="post_id" value="{{ post.pk }}" />
+
+            <div class="container-center">
+                <div><button type="submit">Отправить</button></div>
+            </div>
+    </div>
+</form>
 
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-# Create your models here.
+from django.contrib.auth import get_user_model
 
 
 class PublishedModel(models.Manager):
@@ -29,9 +29,11 @@ class Cat(models.Model):
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)), default=Status.DRAFT, verbose_name='Статус')
     img = models.CharField(max_length=255, blank=True, verbose_name='Адрес изображения')
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None, blank=True, null=True, verbose_name='Фото')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts', verbose_name='Категории')
     tags = models.ManyToManyField('TagPosts', blank=True, related_name='tags', verbose_name='Тэги')
     owners = models.OneToOneField('Owners', on_delete=models.SET_NULL, null=True, blank=True, related_name='pet', verbose_name='Владельцы')
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='posts', null=True, default=None)
 
     def __str__(self):
         return self.title
@@ -72,3 +74,30 @@ class Owners(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UploadFiles(models.Model):
+    file = models.FileField(upload_to='uploads_model')
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='comments', null=True,
+                               default=None)
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+    content = models.TextField(blank=True, verbose_name='Комментарий')
+    post = models.ForeignKey(Cat, on_delete=models.CASCADE, related_name='comments')
+
+    def __str__(self):
+        return self.content
+
+
+class Like(models.Model):
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='likes', null=True,
+                               default=None)
+    post = models.ForeignKey(Cat, on_delete=models.CASCADE, related_name='likes')
+
+
+class Dislike(models.Model):
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='dislikes', null=True,
+                               default=None)
+    post = models.ForeignKey(Cat, on_delete=models.CASCADE, related_name='dislikes')

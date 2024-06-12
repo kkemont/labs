@@ -19,9 +19,15 @@
                     <li>
                        <a href="/"><img src="{% static 'cats/images/catlogo.png' %}" alt="FunnyCats" height="30px"></a>
                     </li>
-                    {% for el in menu %}
+
+                    {% for el in mainmenu %}
                         <li><a href="{% url el.url_name %}">{{ el.title }}</a></li>
                     {% endfor %}
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'users:profile' %}">{{user.username}}</a> | <a href="{% url 'users:logout' %}">Выйти</a></li>
+                    {% else %}
+                        <li><a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -41,6 +47,9 @@
                 {% endblock %}
 
                 {% block content %}
+                {% endblock %}
+
+                {% block navigation %}
                 {% endblock %}
                 </div>
             </div>

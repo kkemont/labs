@@ -1,5 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> Добавить кота </h1>
+    <h1> {{title}} </h1>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <div class="form-error">{{ form.non_field_errors }}</div>
+
+             {% for f in form %}
+                <p><label class="form-label" for="{{ f.id_for_label}}">{{f.label}}: </label>{{ f }}</p>
+                <div class="form-error">{{ f.errors }}</div>
+            {% endfor %}
+
+            {% if object %}
+                <p>Имя: {{object.title}}</p>
+            {% endif %}
+
+            <div><button type="submit">Подтвердить</button></div>
+        </div>
+    </form>
+
 {% endblock %}
